@@ -1,0 +1,104 @@
+﻿@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-5">
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <div class="bg-light p-4 rounded shadow-sm mb-4">
+            <h1 class="display-5">Welcome, @Model.Username!</h1>
+            <p class="lead">This is your personal dashboard showing your today's and upcoming appointments.</p>
+        </div>
+
+        <div class="row">
+            <!-- TODAY'S APPOINTMENTS -->
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4 border-0">
+                    <div class="card-header bg-primary text-white rounded-top">
+                        <h4 class="mb-0">Today's Appointments</h4>
+                    </div>
+                    <div class="card-body bg-white rounded-bottom shadow-sm">
+                        @if (Model.TodayAppointments != null && Model.TodayAppointments.Any())
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var item in Model.TodayAppointments)
+                                {
+                                    var badgeClass = item.Status_name switch {
+                                        "Zakazan" => "list-group-item-success",
+                                        "Vo tek" => "list-group-item-success",
+                                        "Otkazan" => "list-group-item-danger",
+                                        _ => ""
+                                    };
+
+                                    <li class="list-group-item @badgeClass d-flex justify-content-between align-items-center mb-2 rounded shadow-sm">
+                                        <div>
+                                            <strong>Time:</strong> @item.AppointmentTime.ToString("HH:mm") <br />
+                                            <span>Status: <strong>@item.Status_name</strong></span>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted mb-0">You have no appointments for today.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- UPCOMING APPOINTMENTS -->
+            <div class="col-md-6">
+                <div class="card shadow-sm mb-4 border-0">
+                    <div class="card-header bg-secondary text-white rounded-top">
+                        <h4 class="mb-0">Appointments in the Next 7 Days</h4>
+                    </div>
+                    <div class="card-body bg-white rounded-bottom shadow-sm">
+                        @if (Model.UpcomingAppointments != null && Model.UpcomingAppointments.Any())
+                        {
+                            <ul class="list-group list-group-flush">
+                                @foreach (var item in Model.UpcomingAppointments)
+                                {
+                                    var badgeClass = item.Status_name switch {
+                                        "Zakazan" => "list-group-item-success",
+                                        "Vo tek" => "list-group-item-success",
+                                        "Otkazan" => "list-group-item-danger",
+                                        _ => ""
+                                    };
+
+                                    <li class="list-group-item @badgeClass d-flex justify-content-between align-items-center mb-2 rounded shadow-sm">
+                                        <div>
+                                            <strong>Date:</strong> @item.AppointmentTime.ToString("dd.MM.yyyy HH:mm") <br />
+                                            <span>Status: <strong>@item.Status_name</strong></span>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted mb-0">You have no scheduled appointments in the next 7 days.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- UREDEN DIZAJN KOGA KORISNIKOT NE E NAJAVEN -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center py-5 px-4 bg-light rounded shadow-sm mt-4">
+                <h1 class="display-4 fw-bold text-primary mb-3">Welcome to WebDoctor</h1>
+                <p class="lead text-secondary mb-4">
+                    Your reliable platform for managing medical appointments, doctors, and patients efficiently. Please log in to access your personal dashboard.
+                </p>
+                <div>
+                    <a class="btn btn-primary btn-lg px-4 me-2 shadow-sm" asp-controller="Account" asp-action="Login">Log In</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

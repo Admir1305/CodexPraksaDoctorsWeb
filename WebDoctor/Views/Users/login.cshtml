@@ -1,0 +1,35 @@
+﻿@model WebDoctor.Models.LoginDto
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">Login</h3>
+
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Korisnik" class="form-label">Username</label>
+                        <input asp-for="Korisnik" class="form-control" placeholder="Enter username" required />
+                        <span asp-validation-for="Korisnik" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Lozinka" class="form-label">Password</label>
+                        <input asp-for="Lozinka" type="password" class="form-control" placeholder="Enter password" required />
+                        <span asp-validation-for="Lozinka" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

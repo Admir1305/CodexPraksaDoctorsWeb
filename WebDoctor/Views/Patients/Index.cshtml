@@ -1,0 +1,86 @@
+﻿@model IEnumerable<WebDoctor.Models.Patients>
+@{
+    ViewData["Title"] = "All patients";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Doctors List</h2>
+        <a asp-action="Create" class="btn btn-success">
+            <i class="bi bi-person-plus-fill me-1"></i> Add New Patient
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive shadow-sm rounded">
+            <table class="table table-hover table-striped align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone</th>
+                        <th>EMBG</th>
+                        <th>Email</th>
+                        <th class="text-center" style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var patient in Model)
+                    {
+                        <tr>
+                            <td>@patient.Id</td>
+                            <td>@patient.FirstName</td>
+                            <td>@patient.LastName</td>
+                            <td>@patient.Phone</td>
+                            <td>@patient.EMBG</td>
+                            <td>@patient.Email</td>
+                           
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@patient.Id" class="btn btn-outline-warning btn-sm me-1" title="Edit">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+
+                                <a onclick="DeletePatient(@patient.Id)" asp-route-id="@patient.Id" class="btn btn-outline-danger btn-sm" title="Delete">
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center mt-3" role="alert">
+            <i class="bi bi-info-circle me-2"></i> No doctors currently found in the database.
+        </div>
+    }
+</div>
+<script>
+
+    function DeletePatient(Id){
+        console.log(Id);
+        if(confirm("Are you sure you want to delete this patient?")){
+            fetch('/Patients/Delete/' + Id, {
+                method: 'DELETE'
+            })
+            .then(response => { 
+                if (response.ok){
+                    console.log('response.ok');
+                    location.reload();
+                }
+                else {
+                    alert("Error deleting patient! Server returned status: " + response.status);
+                }
+            })
+            .catch(error => {
+                console.error('Error', error);
+            });
+        }
+    }
+</script>

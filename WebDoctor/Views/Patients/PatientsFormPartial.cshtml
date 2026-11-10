@@ -1,0 +1,78 @@
+@model WebDoctor.Models.Patients
+
+@{
+
+    bool isEdit = Model.Id > 0;
+
+
+    ViewData["Title"] = isEdit ? "Edit Patient" : "Add New Patient";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header @(isEdit ? "bg-warning text-dark" : "bg-primary text-white")">
+                    <h4 class="mb-0">@(isEdit ? "Edit Patient" : "Add New Patient")</h4>
+                </div>
+                <div class="card-body">
+
+                    <form asp-action="@(isEdit ? "Edit" : "Create")" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+
+                        @if (isEdit)
+                        {
+                            <input type="hidden" asp-for="Id" />
+                        }
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="FirstName" class="form-label">First Name</label>
+                            <input asp-for="FirstName" class="form-control" placeholder="Enter patients's first name" required />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label">Last Name</label>
+                            <input asp-for="LastName" class="form-control" placeholder="Enter patients's last name" required />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EMBG" class="form-label">EMBG</label>
+                            <input asp-for="EMBG" class="form-control" placeholder="Enter 13 digits (e.g. 1203999450012)" required />
+                            <span asp-validation-for="EMBG" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Phone" class="form-label">Phone</label>
+                            <input asp-for="Phone" class="form-control" placeholder="+389 00 000 000" required />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" placeholder="example@gmail.com" type="email" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+
+                            <button type="submit" class="btn @(isEdit ? "btn-primary" : "btn-success")">
+                                <i class="bi bi-check-circle"></i> @(isEdit ? "Update" : "Save")
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

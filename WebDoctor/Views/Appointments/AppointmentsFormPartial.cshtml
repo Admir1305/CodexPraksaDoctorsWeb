@@ -1,0 +1,66 @@
+@model WebDoctor.Models.Appointments
+@{
+    var isEdit = Model != null && Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Edit Appointment" : "Schedule New Appointment";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+
+    <form asp-action="@(isEdit ? "Edit" : "Create")" asp-route-id="@Model?.Id" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        @if (isEdit)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
+
+        <div class="mb-3">
+            <label asp-for="DoctorId" class="form-label">Doctor</label>
+            <select asp-for="DoctorId" class="form-control" asp-items="ViewBag.Doctors">
+                <option value="">-- Select Doctor --</option>
+            </select>
+            <span asp-validation-for="DoctorId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="PatientId" class="form-label">Patient</label>
+            <select asp-for="PatientId" class="form-control" asp-items="ViewBag.Patients">
+                <option value="">-- Select Patient --</option>
+            </select>
+            <span asp-validation-for="PatientId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="AppointmentTime" class="form-label">Appointment Time</label>
+            <input asp-for="AppointmentTime" type="datetime-local" step="60" class="form-control" min="@DateTime.Now.AddMinutes(1).ToString("yyyy-MM-ddTHH:mm")" required />
+            <span asp-validation-for="AppointmentTime" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Status_id" class="form-label">Status</label>
+            <select asp-for="Status_id" class="form-select" asp-items="ViewBag.Statuses">
+                <option value="">-- Select status --</option>
+            </select>
+            <span asp-validation-for="Status_id" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Notes" class="form-label">Notes</label>
+            <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
